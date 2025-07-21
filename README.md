@@ -50,7 +50,6 @@ Welcome to the **Ultimate SQL Tutorial Repository** — your step-by-step, begin
 ```
 SQL-Tutorial/
 ├── tutorial.sql          # Full SQL walkthrough with inline comments
-├── sample_data.sql       # (Optional) Insert data into tables
 ├── README.md             # You're here!
 ```
 
