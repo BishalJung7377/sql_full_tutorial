@@ -32,6 +32,7 @@ Welcome to the **Ultimate SQL Tutorial Repository** — your step-by-step, begin
 - Use `NOW()`, `CURRENT_DATE()`, `DATEDIFF()`
 - Perform time-based analysis
 
+
 ### ✅ Transactions & Constraints
 
 - Learn about `AUTO_INCREMENT`, `PRIMARY KEY`, `UNIQUE`, `CHECK`
@@ -43,7 +44,36 @@ Welcome to the **Ultimate SQL Tutorial Repository** — your step-by-step, begin
 - Product catalog with constraints
 - Customer transactions with relational models
 
----
+### ✅ Triggers & Automation
+
+- Create `BEFORE` and `AFTER` triggers for `INSERT`, `UPDATE`, and `DELETE`
+- Automatically update related tables using triggers
+- Maintain running totals and audit logs without manual input
+
+### ✅ Stored Procedures
+
+- Define reusable blocks of logic with `CREATE PROCEDURE`
+- Use `CALL` to execute logic with or without parameters
+- Simplify complex business logic (e.g., salary calculation, reporting)
+
+### ✅ Subqueries & Nested Logic
+
+- Use subqueries in `SELECT`, `WHERE`, and `FROM` clauses
+- Compare results using nested `IN`, `EXISTS`, and `NOT EXISTS`
+- Filter data based on aggregated or conditional subresults
+
+### ✅ Views
+
+- Create and manage virtual tables using `CREATE VIEW`
+- Simplify repetitive queries and secure access to sensitive columns
+- Filter, sort, and join within views
+
+### ✅ Advanced SQL Concepts
+
+- Implement `GROUP BY`, `HAVING`, `ROLLUP` for multi-level summaries
+- Use conditional logic with `CASE WHEN THEN END`
+- Apply indexing and understand performance implications
+
 
 ## 📂 File Structure
 
