@@ -844,3 +844,628 @@ select * from employees;
 
 select concat(first_name," ",last_name) as full_name
 from employees;
+
+alter table employees 
+add column job varchar(25) after hourly_pay;
+
+update employees
+set job = case
+	when employee_id = 1 then "Manager"
+    when employee_id = 2 then "Cashier"
+    when employee_id = 3 then "Cook"
+    when employee_id = 4 then "Cook"
+	when employee_id = 5 then "Asst manager"
+    when employee_id = 6 then "Janitor"
+	else job
+end;
+
+-- ===========================================
+-- Step: Filter employees hired before a specific date and with a specific job
+-- ===========================================
+
+-- This query retrieves all employees who were hired before January 5, 2023
+-- AND whose job title is exactly 'Cook'.
+-- Uses the AND logical operator to apply both conditions.
+SELECT * 
+FROM employees
+WHERE hire_date < '2023-01-05' AND job = 'Cook';
+
+-- ===========================================
+-- Step: Filter employees with job title 'Cook' or 'Cashier'
+-- ===========================================
+
+-- This query retrieves all employees whose job title is either 'Cook' or 'Cashier'.
+-- Uses the OR logical operator to return rows that satisfy either condition.
+SELECT * 
+FROM employees
+WHERE job = 'Cook' OR job = 'Cashier';
+
+-- ===========================================
+-- Step: Filter employees excluding certain job titles
+-- ===========================================
+
+-- This query retrieves all employees whose job title is neither 'manager' nor 'asst manager'.
+-- It uses the NOT operator with AND to exclude both job titles from the result.
+-- Equivalent to: WHERE job != 'manager' AND job != 'asst manager'
+SELECT * 
+FROM employees
+WHERE NOT job = 'manager' AND NOT job = 'asst manager';
+
+
+-- ===========================================
+-- Step: Filter employees hired within a specific date range
+-- ===========================================
+
+-- This query retrieves all employees whose hire date falls between 
+-- January 4, 2023 and January 7, 2023, inclusive.
+-- The BETWEEN operator includes both boundary dates in the result.
+SELECT * 
+FROM employees
+WHERE hire_date BETWEEN '2023-01-04' AND '2023-01-07';
+
+
+-- ===========================================
+-- Step: Filter employees with specific job titles
+-- ===========================================
+
+-- This query retrieves all employees whose job title is either 'cook', 'cashier', or 'janitor'.
+-- The IN operator is used to simplify multiple OR conditions.
+-- Equivalent to: job = 'cook' OR job = 'cashier' OR job = 'janitor'
+SELECT * 
+FROM employees
+WHERE job IN ('cook', 'cashier', 'janitor');
+
+
+
+-- =============  WILD CARDS ===========================================
+-- Purpose:
+-- Retrieve all records from the 'employees' table where the 
+-- employee's last name starts with the letter 'S'.
+-- ========================================================
+
+-- Explanation of the LIKE operator and wildcards:
+-- The LIKE operator is used to search for a specific pattern in a text column.
+-- Wildcards are used with LIKE to define flexible matching rules.
+
+-- Common SQL Wildcards:
+-- 1. '%'  : Matches zero, one, or many characters.
+--          Example: 'S%' matches 'Smith', 'Sullivan', 'S'.
+-- 2. '_'  : Matches exactly one single character.
+--          Example: 'S__' matches 'Sam', 'Sue', but not 'Smith'.
+
+-- 
+-- Some databases like SQL Server also support:
+-- - [ ]   : Matches any one character within the brackets.
+-- - [^ ] or [! ] : Matches any character not in the brackets.
+-- These bracket-style wildcards are not supported in MySQL or PostgreSQL.
+
+SELECT * 
+FROM employees
+WHERE last_name LIKE 'S%';  -- Filters for last names beginning with 'S'
+
+-- ===========================================================
+-- Step: Filter employees whose job title matches a specific pattern
+-- ===========================================================
+
+-- Purpose:
+-- This query retrieves all records from the 'employees' table 
+-- where the 'job' column matches a four-letter word ending with 'ook', 
+-- such as 'cook' or 'book'.
+-- - The LIKE operator is used for pattern matching in string data.
+-- - The underscore (_) wildcard represents **exactly one single character**.
+SELECT * 
+FROM employees
+WHERE job LIKE '_ook';
+
+-- ===========================================
+--  Retrieve all employees sorted by hourly pay (ascending)
+-- ===========================================
+
+-- This query selects all records from the 'employees' table
+-- and sorts the results in ascending order based on the 'hourly_pay' column.
+
+SELECT * 
+FROM employees
+ORDER BY hourly_pay ASC;
+
+
+-- ===========================================
+-- Retrieve all employees sorted by last name
+-- ===========================================
+
+-- This query selects all records from the 'employees' table
+-- and sorts them based on the 'last_name' column.
+-- By default, the ORDER BY clause sorts results in **ascending order (A to Z)** 
+-- unless specified otherwise using DESC for descending.
+
+SELECT * 
+FROM employees
+ORDER BY last_name;
+
+
+-- =====================================================
+-- Sort transactions by amount, then by customer ID
+-- =====================================================
+
+-- This query retrieves all records from the 'transactions' table
+-- and sorts them first by 'amount' in ascending order.
+-- If multiple transactions have the same amount, they are further
+-- sorted by 'customer_id' in ascending order.
+
+SELECT * 
+FROM transactions
+ORDER BY amount, customer_id;
+  
+-- ================================================
+--  Retrieve the first 3 records from customers
+-- ================================================
+
+-- This query selects all columns from the 'customers' table
+-- and limits the result to only the first 3 rows.
+-- Useful when previewing a small subset of data.
+
+SELECT * 
+FROM customers
+LIMIT 3;
+
+-- =====================================================
+-- Retrieve the last 2 customers based on last name
+-- =====================================================
+
+-- This query selects all columns from the 'customers' table,
+-- sorts the results by 'last_name' in descending (Z to A) order,
+-- and returns only the top 2 rows after sorting.
+
+SELECT * 
+FROM customers
+ORDER BY last_name DESC
+LIMIT 2;
+
+-- =============================================================
+-- Step: Combine first and last names from employees and customers
+-- =============================================================
+
+-- Purpose:
+-- This query retrieves the 'first_name' and 'last_name' columns 
+-- from both the 'employees' and 'customers' tables, 
+-- and combines them into a single result set.
+
+-- Explanation:
+-- - The UNION operator combines the results of two SELECT statements.
+-- - It removes duplicate rows by default. 
+-- - To include duplicates, you would use UNION ALL instead.
+
+-- Important Requirements for UNION:
+-- 1. Both SELECT statements must return the **same number of columns**.
+-- 2. The **data types** of the columns must be compatible.
+-- 3. The final column names in the result will be taken from the **first SELECT**.
+-- 4. The ORDER BY clause, if used, should be placed at the very end.
+
+-- Useful when you want to list all unique names across both employees and customers.
+
+SELECT first_name, last_name FROM employees
+UNION
+SELECT first_name, last_name FROM customers;
+
+alter table customers
+add referral_id int;
+
+
+
+update customers
+set referral_id = case
+	when customer_id = 2 then 1
+    when customer_id = 3 then 2
+    when customer_id = 4 then 2
+	else referral_id
+end;
+
+select * from customers;
+
+
+-- ============================================================
+-- Step: Perform a self join to match customers with referrals
+-- ============================================================
+
+-- Purpose:
+-- This query retrieves pairs of customers where one customer (b)
+-- was referred by another customer (a). Both aliases refer to the
+-- same 'customers' table, allowing us to analyze internal relationships.
+
+-- Explanation:
+-- - 'a' represents the referring customer.
+-- - 'b' represents the referred customer.
+-- - The join condition matches rows where 'b.referral_id' equals 'a.customer_id',
+--   meaning customer 'a' referred customer 'b'.
+
+-- Use Case:
+-- Useful for generating referral reports or tracking customer influence.
+
+SELECT a.customer_id, a.first_name, a.last_name, 
+	concat(b.first_name," ", b.last_name) as "reffered_by"
+FROM customers AS a
+INNER JOIN customers AS b
+ON b.referral_id = a.customer_id;
+
+
+-- ================================================================
+--  Create a view named 'employee_attendance'
+-- ================================================================
+
+-- This view selects the 'first_name' and 'last_name' columns from the 'employees' table.
+-- It acts as a simplified, virtual table that can be queried like a regular table.
+-- Useful for hiding unnecessary columns and providing a focused view of data.
+
+CREATE VIEW employee_attendance AS
+SELECT first_name, last_name 
+FROM employees;
+
+-- ================================================================
+--  Query all records from the 'employee_attendance' view
+-- ================================================================
+
+-- This retrieves all rows from the view. Although it looks like a table,
+-- the data is dynamically fetched from the 'employees' table when queried.
+
+SELECT * 
+FROM employee_attendance;
+
+-- ================================================================
+-- Sort the view results by last name in ascending order
+-- ================================================================
+
+-- You can apply ORDER BY and other clauses while querying a view,
+-- just like you would with a normal table.
+
+SELECT * 
+FROM employee_attendance
+ORDER BY last_name ASC;
+
+-- ================================================================
+-- Drop (delete) the view when it's no longer needed
+-- ================================================================
+
+-- This command removes the view definition from the database.
+-- The original 'employees' table remains unaffected.
+
+DROP VIEW employee_attendance;
+
+
+alter table customers
+add customer_email varchar(50);
+
+select * from customers;
+
+update customers
+set customer_email = case
+	when customer_id = 1 then 'fred.fish@gmail.com'
+    when customer_id = 2 then 'llobster@gmail.com'
+    when customer_id = 3 then 'bbass@gmail.com'
+    when customer_id = 4 then 'ppuff@gmail.comm'
+    else customer_email
+end;
+
+create view customer_emails as 
+select customer_email from customers;
+
+select * from customer_emails;
+
+-- ================================================================
+-- For subqueries
+-- Ask:
+-- 👉 What columns should be in the final result?
+-- 👉 What condition depends on another table or result?
+
+-- ================================================================
+-- Show each employee's pay along with the company-wide average pay
+-- ================================================================
+-- This query retrieves each employee’s first name, last name, and hourly pay,
+-- and includes a new column that shows the average hourly pay for all employees.
+-- The average is calculated using a subquery and is repeated for comparison on every row.
+SELECT first_name, last_name, hourly_pay, 
+       (SELECT AVG(hourly_pay) FROM employees) AS Avg_pay
+FROM employees;
+
+
+
+-- ================================================================
+-- Find employees earning more than the average hourly pay
+-- ================================================================
+-- This query lists only those employees whose hourly pay is greater than
+-- the average pay across all employees.
+-- The subquery calculates the average, and the outer query filters out
+-- the employees whose pay is below or equal to it.
+SELECT first_name, last_name, hourly_pay 
+FROM employees
+WHERE employees.hourly_pay > (
+    SELECT AVG(hourly_pay) 
+    FROM employees
+);
+
+
+-- ==============================================================================
+-- Retrieve names of customers who have made at least one transaction
+-- ==============================================================================
+-- Step 1: The subquery gets a distinct list of customer IDs from the 'transactions' table
+--         where the customer_id is not NULL (i.e., valid customers only).
+-- Step 2: The outer query retrieves the first and last names from the 'customers' table
+--         for only those customer IDs found in the subquery result.
+-- This helps you filter and display only customers who are active (i.e., made a purchase).
+SELECT first_name, last_name 
+FROM customers
+WHERE customer_id IN (
+    SELECT DISTINCT customer_id 
+    FROM transactions 
+    WHERE customer_id IS NOT NULL
+);
+
+ALTER TABLE transactions
+ADD order_date DATE;
+
+UPDATE transactions
+SET order_date = CASE 
+    WHEN transaction_id = 1000 THEN '2023-01-01'
+    WHEN transaction_id = 1001 THEN '2023-01-01'
+    WHEN transaction_id = 1002 THEN '2023-01-02'
+    WHEN transaction_id = 1003 THEN '2023-01-02'
+    WHEN transaction_id = 1004 THEN '2023-01-03'
+END
+WHERE transaction_id < 1005;
+
+INSERT INTO transactions (transaction_id, amount, customer_id, order_date)
+VALUES 
+    (1005, 2.49, 4, '2023-01-03'),
+    (1006, 5.48, NULL, '2023-01-03');
+    
+select * from transactions;
+
+-- ==============================================================================
+-- Calculate total sales (amount) grouped by each order date
+-- ==============================================================================
+-- This query returns the total transaction amount for each unique date.
+-- The SUM(amount) function adds up all sales on the same date,
+-- and the GROUP BY clause groups the data by 'order_date'.
+-- 💡 Useful for generating daily sales reports or trend analysis over time.
+SELECT SUM(amount), order_date 
+FROM transactions
+GROUP BY order_date;
+
+
+-- ==============================================================================
+-- Find the maximum transaction amount for each order date
+-- ==============================================================================
+-- This query groups the data by 'order_date' and finds the highest (maximum)
+-- transaction amount that occurred on each specific date.
+-- The MAX(amount) function returns the largest amount within each date group.
+-- 💡 Useful for identifying peak sales per day or the largest transaction per date.
+SELECT MAX(amount), order_date 
+FROM transactions
+GROUP BY order_date;
+
+
+-- ==============================================================================
+-- Count how many transactions each customer made (only if more than 1)
+-- ==============================================================================
+-- This query groups transactions by 'customer_id' and counts how many times
+-- each customer appears in the 'amount' column (i.e., how many purchases they made).
+-- The HAVING clause filters out:
+--   - Customers with only 1 or no transactions
+--   - Any records where customer_id is NULL (i.e., anonymous transactions)
+-- 💡 This helps identify repeat customers with more than one transaction.
+SELECT COUNT(amount), customer_id
+FROM transactions
+GROUP BY customer_id
+HAVING COUNT(amount) > 1 AND customer_id IS NOT NULL;
+
+
+-- ==============================================================================
+-- Calculate total transaction amount per day, including a grand total (ROLLUP)
+-- ==============================================================================
+-- This query groups the transactions by 'order_date' and sums up the 'amount' for each date.
+-- The 'WITH ROLLUP' extension adds an extra row at the end to show the overall grand total
+-- across all dates (indicated by a NULL in the 'order_date' column).
+-- 💡 Useful for generating daily sales reports along with the total sales overall.
+SELECT SUM(amount), order_date 
+FROM transactions
+GROUP BY order_date WITH ROLLUP;
+
+-- ==============================================================================
+-- Create a stored procedure to retrieve all customer records
+-- ==============================================================================
+-- The 'DELIMITER $$' allows defining the procedure body without conflicting 
+-- with the default semicolon (;) used in SQL.
+-- This stored procedure is named 'get_customers' and has no input parameters.
+-- When called, it executes a SELECT query to return all rows from the 'customers' table.
+-- After defining the procedure, the delimiter is reset to the default semicolon.
+DELIMITER $$
+
+CREATE PROCEDURE get_customers()
+BEGIN 
+    SELECT * FROM customers;
+END $$
+
+DELIMITER ;
+
+-- ==============================================================================
+-- Call (execute) the stored procedure to get customer data
+-- ==============================================================================
+-- This statement manually invokes the 'get_customers' procedure,
+-- which runs the SELECT query defined earlier.
+CALL get_customers();
+
+
+
+alter table employees
+add column salary decimal(10,2) after hourly_pay;
+
+UPDATE employees
+SET salary = hourly_pay * 40 * 52;
+
+select * from employees;
+
+-- ==============================================================================
+-- Trigger: Automatically update 'salary' before 'hourly_pay' changes
+-- ==============================================================================
+-- This trigger fires BEFORE an UPDATE is made to the 'employees' table.
+-- It ensures that whenever an employee's 'hourly_pay' is changed,
+-- the corresponding 'salary' is automatically recalculated using the formula:
+--     salary = hourly_pay × 40 hours/week × 52 weeks/year
+-- 💡 This helps keep 'salary' in sync with any updates made to 'hourly_pay'.
+DELIMITER $$
+
+CREATE TRIGGER before_hourly_pay_update
+BEFORE UPDATE ON employees
+FOR EACH ROW 
+BEGIN
+    SET NEW.salary = NEW.hourly_pay * 40 * 52;
+END $$
+
+DELIMITER ;
+
+
+update employees
+set hourly_pay = hourly_pay + 1;
+select * from employees;
+
+delete from employees
+where employee_id = 6;
+
+
+-- ==============================================================================
+-- Trigger: Automatically calculate 'salary' before inserting a new employee
+-- ==============================================================================
+-- This trigger fires BEFORE a new row is inserted into the 'employees' table.
+-- It ensures that when a new employee is added with a specified 'hourly_pay',
+-- the 'salary' is automatically calculated using the formula:
+--     salary = hourly_pay × 40 hours/week × 52 weeks/year
+-- 💡 This keeps the 'salary' column correctly populated based on the given hourly rate.
+DELIMITER $$
+
+CREATE TRIGGER before_hourly_pay_insert
+BEFORE INSERT ON employees
+FOR EACH ROW
+BEGIN
+    SET NEW.salary = NEW.hourly_pay * 40 * 52;
+END $$
+
+DELIMITER ;
+
+
+select * from employees;
+insert into employees
+values(6,"Sheldon","Plankton", 10, NULL, "janitor", "2023-01-07");
+
+select * from employees;
+
+
+
+create table expenses(
+expense_id int primary key auto_increment,
+expense_name varchar(50),
+expense_total decimal(10,2)
+);
+
+
+insert into expenses
+values (1, "salaries",0),
+	   (2, "suppliess",0),
+       (3, "taxes",0);
+
+
+update expenses
+set expense_total = (select sum(salary) from employees)
+where expense_name = 'salaries';
+
+select * from expenses;
+
+
+-- ==============================================================================
+-- Trigger: Update total expenses after an employee's salary is deleted
+-- ==============================================================================
+-- This trigger fires AFTER a row is deleted from the 'employees' table.
+-- It automatically updates the 'expenses' table by subtracting the deleted
+-- employee’s salary from the 'expense_total', specifically where the 
+-- 'expense_name' is "salaries".
+-- 💡 Useful for keeping the company's salary expense total accurate whenever
+--     an employee is removed from the system.
+DELIMITER $$
+
+CREATE TRIGGER after_salary_delete
+AFTER DELETE ON employees
+FOR EACH ROW 
+BEGIN 
+    UPDATE expenses
+    SET expense_total = expense_total - OLD.salary
+    WHERE expense_name = 'salaries';
+END $$
+
+DELIMITER ;
+
+
+select * from expenses;
+
+
+delete from employees
+where employee_id = 6;
+
+
+
+-- ==============================================================================
+-- Trigger: Update total salary expenses after a new employee is added
+-- ==============================================================================
+-- This trigger fires AFTER a new row is inserted into the 'employees' table.
+-- It automatically updates the 'expenses' table by adding the new employee’s
+-- salary to the 'expense_total', but only for the row where 'expense_name' is "salaries".
+-- 💡 This ensures that total salary expenses remain accurate whenever new
+--     employees are added to the system.
+DELIMITER $$
+
+CREATE TRIGGER after_salary_insert
+AFTER INSERT ON employees
+FOR EACH ROW
+BEGIN 
+    UPDATE expenses
+    SET expense_total = expense_total + NEW.salary
+    WHERE expense_name = 'salaries';
+END $$
+
+DELIMITER ;
+
+
+
+select * from expenses;
+
+insert into employees
+values(6,"Sheldon","Plankton", 10, NULL, "janitor", "2023-01-07");
+
+select * from expenses;
+
+
+-- ==============================================================================
+-- Trigger: Adjust salary expenses when an employee's salary is updated
+-- ==============================================================================
+-- This trigger fires AFTER a salary update on the 'employees' table.
+-- It calculates the **difference between the new and old salary** values,
+-- and adds that difference to the 'expense_total' in the 'expense' table,
+-- but only where 'expense_name' is "salaries".
+-- 💡 This ensures that salary-related expenses remain accurate by reflecting
+--     salary increases or decreases without overwriting the whole amount.
+DELIMITER $$
+
+CREATE TRIGGER after_salary_update
+AFTER UPDATE ON employees
+FOR EACH ROW 
+BEGIN
+    UPDATE expense 
+    SET expense_total = expense_total + (NEW.salary - OLD.salary)
+    WHERE expense_name = 'salaries';
+END $$
+
+DELIMITER ;
+
+
+update employees 
+set hourly_pay = 100
+where employee_id = 1;
+
+select * from expenses;
