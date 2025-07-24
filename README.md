@@ -79,7 +79,7 @@ Welcome to the **Ultimate SQL Tutorial Repository** — your step-by-step, begin
 
 ```
 SQL-Tutorial/
-├── tutorial.sql          # Full SQL walkthrough with inline comments
+├── sql_full.sql          # Full SQL walkthrough with inline comments
 ├── README.md             # You're here!
 ```
 
