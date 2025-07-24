@@ -128,7 +128,7 @@ FROM transactions;
 
 ## 👨‍💻 Author
 
-**Bishal Jung Thapa Chhetri**Data Analyst | Software Developer | [LinkedIn](https://www.linkedin.com/in/bishal-jung23/)
+**Bishal Jung Thapa Chhetri** | Data Analyst | Software Developer | [LinkedIn](https://www.linkedin.com/in/bishal-jung23/)
 
 ---
 
